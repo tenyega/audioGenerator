@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Zoizo</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <link rel="stylesheet" type="text/css" href="css/zoizo.css" />
+
+</head>
+
+<body>  <!-- onchange="vitesseDeplacement(this);"
+  onmousedown="sourisEnfonceRangeVitesse_b = true;"
+  onmouseup="sourisEnfonceRangeVitesse_b = false;"
+  onmousemove="if(sourisEnfonceRangeVitesse_b) {vitesseDeplacement(this);}" -->
+  <input type="range" id='vitesse_rang' min="5" max="50" step="1" value='15' /><span>15</span>
+
+  <!-- <input type="range" onchange="vitesseDeplacement(this);" min="10" max="30" step="1" value='15' /><span>15</span> -->
+
+  <span class='zoizo position_1'></span>
+
+  <script>
+    let largeurWin = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+    let rangeVitesse = document.querySelector('#vitesse_rang');
+    let sourisEnfonceRangeVitesse_b = false;
+
+    rangeVitesse.addEventListener("change", function () {
+      //this.nextSibling.innerHTML = this.value;
+      vitesseDeplacement(this);
+    });
+
+    // gestion du bouton de la souris
+    rangeVitesse.addEventListener("mousedown", function () {
+      sourisEnfonceRangeVitesse_b = true;
+    });
+    rangeVitesse.addEventListener("mouseup", function () {
+      sourisEnfonceRangeVitesse_b = false;
+    });
+
+    rangeVitesse.addEventListener("mousemove", function () {
+     
+      if(sourisEnfonceRangeVitesse_b) {vitesseDeplacement(this);}
+
+    });
+
+
+    function vitesseDeplacement(leRange) {
+      console.log(leRange.value);
+      // je sélectionne la balise qui est après leRange, donc je sélectionne le <span>
+      leRange.nextSibling.innerHTML = leRange.value;
+
+      quantiteDeplacement = 1 * leRange.value; 
+    }
+
+
+    // evenement RESIZE
+    // si on redimensionne le navigateur, je redemande, la valeur de sa largeur.
+    window.onresize = function () {
+      //console.log('largeurWin ' + largeurWin);
+      largeurWin = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+      posEcranMax = largeurWin;
+    }
+
+    let compteur = 1;
+    let positionMax = 9;
+    let posXEcran = 0;
+    let posEcranMax = largeurWin;
+    let quantiteDeplacement = 8;
+
+    let zoizo = document.querySelector('.zoizo');
+
+    function loop() {
+
+      zoizo.classList.remove('position_' + compteur);
+      // 1) je modifie
+      compteur++;
+      // 2) je teste
+      if (compteur >= positionMax) {
+        compteur = 1;
+      }
+      // 3) j'utilise
+      zoizo.classList.add('position_' + compteur);
+
+      //-----------------------------------------
+      // position X à l'écran
+      posXEcran += quantiteDeplacement;
+
+      if (posXEcran >= posEcranMax) {
+        posXEcran = 0;
+      }
+      zoizo.style.left = posXEcran + 'px';
+
+    }
+
+    setInterval(() => {
+      loop();
+    }, 80);
+
+  </script>
+</body>
+
+</html>
